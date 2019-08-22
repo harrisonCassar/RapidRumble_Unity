@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class killObject : MonoBehaviour
 {
+    public GameManager m_GameManager;
+
     private void OnTriggerEnter(Collider other)
     {
-        Destroy(other);
+        m_GameManager.setToDestroy(other);
     }
 }
