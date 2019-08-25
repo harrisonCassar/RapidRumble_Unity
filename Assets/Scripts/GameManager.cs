@@ -12,69 +12,63 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private Vector3[] playerStartPos = new[] { new Vector3(-1.96f, 46.639f, -86.47f), new Vector3(0.48f, 46.639f, -86.47f), new Vector3(-25.45f, 35.35f, -71.81f), new Vector3(-1.96f, 46.639f, -86.47f) };
-
-    public GameObject playerPrefab;
-    public GameObject itemPrefab;
-    public int numberOfItems = 10;
-    public int numberOfDesiredPlayers = 2;
-
-    private GameObject[] players = new GameObject[4];
-    private int numberOfAlivePlayers = 0;
-
-    private GameObject[] items = new GameObject[10];
-    private int numberOfAliveItems = 0;
+    //Methods
+    public void declareRoundWinner(int winner)
+    {
+        Main();
+    }
+    public void matchEnd() { } //show game winnder, ask for reset with num players?
+    public void matchRestart(int numOfPlayers) { }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        resetGame();
+        //Sumo sumo = gameObject.AddComponent<Sumo>() as Sumo;
+        //m_minigames[0] = sumo;
+
+        //disable all minigame's scripts, causing them to STOP running Update()
+        for (int i = 0; i < NUM_MINIGAMES; i++)
+        {
+            m_minigames[i].enabled = false;
+        }
+
+        Main();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Main()
     {
-        if (numberOfAlivePlayers == 0)
-        {
-            resetGame();
-        }
-       //if all players dead, resetGame();
-       //if r is pressed, resetGame();
+        //randomly select games to play
+        minigameInPlay = 0;
+
+        m_minigames[minigameInPlay].resetGame();
+        m_minigames[minigameInPlay].playGame();
     }
-    
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+            matchRestart(NUM_PLAYERS);
+    }
+
+    private void enableMinigame(int index)
+    {
+        m_minigames[index].enabled = true;
+    }
+
     public void setToDestroy(Collider deadObject)
     {
-        if (deadObject.tag == "Item")
-        {
-            
-        }
-        else if (deadObject.tag == "Player")
-        {
-            Destroy(players[--numberOfAlivePlayers]);
-        }
+        m_minigames[minigameInPlay].killObject(deadObject);
     }
 
-    private void resetGame()
-    {
-        destroyAllLive();
+    //Public Data Members
+    public string[] xAxisNames = new[] { "x_player1", "x_player2", "x_player3", "x_player4" };
+    public string[] zAxisNames = new[] { "z_player1", "z_player2", "z_player3", "z_player4" };
+    public int NUM_ROUNDS = 10;
+    public int NUM_PLAYERS = 2;
+    public Minigame[] m_minigames;
 
-        for (int i = 0; i < numberOfDesiredPlayers; i++)
-        {
-            players[i] = Instantiate(playerPrefab, playerStartPos[i], Quaternion.identity);
-            numberOfAlivePlayers++;
-        }
-    }
-
-    private void destroyAllLive()
-    {
-        for (int i = 0; i < numberOfAlivePlayers; i++)
-            Destroy(players[i]);
-
-        numberOfAlivePlayers = 0;
-
-        for (int i = 0; i < numberOfAliveItems; i++)
-            Destroy(items[i]);
-
-        numberOfAlivePlayers = 0;
-    }
+    //Private Data Members
+    private int minigameInPlay = 0;
+    private const int NUM_MINIGAMES = 1;
+    
 }
