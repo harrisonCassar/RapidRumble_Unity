@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class PickedUp : MonoBehaviour
 {
-    // Start is called before the first frame update
     private void OnTriggerEnter(Collider other)
     {
-        other.transform.localScale = other.transform.localScale * 1.1f;
-        //other.attachedRigidbody.mass = other.attachedRigidbody.mass * 1.1f;
-        Destroy(gameObject);
+        if (other.gameObject.tag == "Player")
+        {
+            other.transform.localScale = other.transform.localScale * 1.1f;
+            other.attachedRigidbody.mass = other.attachedRigidbody.mass * 1.1f;
+            Destroy(gameObject);
+        }
     }
 }
