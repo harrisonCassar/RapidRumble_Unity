@@ -94,6 +94,9 @@ public class Sumo : Minigame
     protected override void cleanUpGame()
     {
         killAllLive(); //POTENTIALLY REMOVE THIS LAYER OF ABSTRACTION ALL TOGETHER
+
+        for (int i = 0; i < m_gameManager.NUM_PLAYERS; i++)
+            m_gameManager.m_players[i].GetComponent<Rigidbody>().mass = 1;
     }
 
     //Private Methods
