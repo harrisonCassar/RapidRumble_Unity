@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4004355530657183375}
   m_Layer: 0
   m_Name: SumoBoard
-  m_TagString: Untagged
+  m_TagString: SumoBoard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,3 +105,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer: 5
+  startShrink: 0

@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class ShrinkingPlatform : MonoBehaviour
 {
-    public float timer = 5f;
+    private float timer = 2f;
     private float secondsElapsed = 0;
     private Vector3 finalScale;
     private Vector3 newScale;
     private Vector3 initialScale;
-    public const int DECAY_SPEED = 25;
+    public const int DECAY_SPEED = 10;
+
+    public bool startShrink = false;
 
     void Start()
     {
@@ -21,7 +23,14 @@ public class ShrinkingPlatform : MonoBehaviour
     void Update()
     {
         secondsElapsed += Time.deltaTime;
-        if (secondsElapsed > timer)
+
+        if (startShrink && secondsElapsed < timer)
+        {
+            secondsElapsed = timer;
+            startShrink = false;
+        }
+
+        if (secondsElapsed >= timer)
             gameObject.transform.localScale = initialScale * (Mathf.Exp(-(secondsElapsed-timer)/DECAY_SPEED));
     }
 }

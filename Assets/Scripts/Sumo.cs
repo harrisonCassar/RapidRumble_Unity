@@ -5,9 +5,14 @@ using UnityEngine;
 public class Sumo : Minigame
 {
     public GameObject m_sumoBoardPrefab;
+    public GameObject m_sumoItemPrefab;
+    public GameObject m_sumoShrinkButtonPrefab;
+    public const int NUM_ITEMS = 25;
 
     Vector3[] m_playerStartPos = new[] { new Vector3(-1.3351f, 27.0710f, 35.8596f), new Vector3(1.10489f, 27.0710f, 35.8596f), new Vector3(-25.45f, 35.35f, -71.81f), new Vector3(-1.96f, 46.639f, -86.47f) };
-    
+    GameObject[] m_sumoItems = new GameObject[NUM_ITEMS];
+    GameObject m_sumoShrinkButton;
+
     //Constructor
     public Sumo() : base("Sumo") { }
 
@@ -30,6 +35,21 @@ public class Sumo : Minigame
         m_playfield = Instantiate(m_sumoBoardPrefab, m_playfieldStartPos, Quaternion.identity, parent.transform);
         m_playfield.transform.localScale = new Vector3(25,1,25);
 
+        //create sumo's Shrink Button
+        m_sumoShrinkButton = Instantiate(m_sumoShrinkButtonPrefab, new Vector3(-0.119f, 26.509f, 35.873f), Quaternion.identity, parent.transform);
+
+        //find boundaries of sumo playfield
+        Renderer board = m_playfield.GetComponent<Renderer>();
+        float minX = board.bounds.min.x;
+        float maxX = board.bounds.max.x;
+        float minZ = board.bounds.min.z;
+        float maxZ = board.bounds.max.z;
+
+        //spawn items within boundaries of playfield
+        parent = GameObject.Find("Items");
+
+        for (int i = 0; i < NUM_ITEMS; i++)
+            m_sumoItems[i] = Instantiate(m_sumoItemPrefab, new Vector3(Random.Range(minX, maxX), 26.77879f, Random.Range(minZ, maxZ)), Quaternion.identity, parent.transform);
     }
 
     public override void playGame()
@@ -48,6 +68,8 @@ public class Sumo : Minigame
         {
             //find last player alive
             int tmp = m_gameManager.playerFindFirstActive();
+
+            cleanUpGame();
 
             if (tmp > 0)
                 return tmp + 1;
@@ -69,6 +91,11 @@ public class Sumo : Minigame
         }
     }
 
+    protected override void cleanUpGame()
+    {
+        killAllLive(); //POTENTIALLY REMOVE THIS LAYER OF ABSTRACTION ALL TOGETHER
+    }
+
     //Private Methods
     private void killAllLive()
     {
@@ -76,6 +103,16 @@ public class Sumo : Minigame
         m_gameManager.playerSetScaleAll(new Vector3(1, 1, 1));
         m_numAlivePlayers = 0;
 
-        Destroy(m_playfield);
+        for (int i = 0; i < NUM_ITEMS; i++)
+        {
+            if (m_sumoItems[i] != null)
+                Destroy(m_sumoItems[i]);
+        }
+
+        if (m_sumoShrinkButton != null)
+            Destroy(m_sumoShrinkButton);
+
+        if (m_playfield != null)
+            Destroy(m_playfield);
     }
 }

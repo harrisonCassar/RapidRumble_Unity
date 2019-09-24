@@ -16,6 +16,7 @@ public class Minigame : MonoBehaviour
     public virtual void killObject(Collider deadObject) { }
 
     protected virtual int isGameOver() { return 0; }
+    protected virtual void cleanUpGame() { }
 
     void Update()
     {
@@ -23,6 +24,8 @@ public class Minigame : MonoBehaviour
         if (pnum != 0)
         {
             this.enabled = false;
+            //m_gameManager.playerSetActiveAll(false);
+            //m_gameManager.playerAllowMovementAll(false);
             m_gameManager.declareRoundWinner(pnum);
         }
     }

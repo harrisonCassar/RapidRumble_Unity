@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /* TODO:
- * Make platfrom gradually decrease
  * Add button to start decrease of platform
  * Have pickups fall to gravity
  * Add reset mechanic/detect when ALL players are dead
@@ -12,18 +11,19 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-
     //Data Members
     public string[] xAxisNames = new[] { "x_player1", "x_player2", "x_player3", "x_player4" };
     public string[] zAxisNames = new[] { "z_player1", "z_player2", "z_player3", "z_player4" };
     public int NUM_ROUNDS = 10;
     public int NUM_PLAYERS = 2;
     public Minigame[] m_minigames;
+    public Feature[] m_features;
 
     public GameObject m_playerPrefab;
-    private GameObject[] m_players = new GameObject[4];
+    public GameObject[] m_players = new GameObject[4];
 
     private int minigameInPlay = 0;
+    private int featureInUse = 0;
     private const int NUM_MINIGAMES = 1;
 
     //Methods
@@ -34,6 +34,11 @@ public class GameManager : MonoBehaviour
 
         //before calling to main, make sure no players have won the match already
 
+        Main();
+    }
+    public void declareFeatureFinish()
+    {
+        print("Finished feature!");
         Main();
     }
     public void setToDestroy(Collider deadObject)
@@ -48,12 +53,16 @@ public class GameManager : MonoBehaviour
     }
     public void playerSetActive(int pindex, bool isActive)
     {
-        m_players[pindex].SetActive(isActive);
+        if (m_players[pindex] != null)
+            m_players[pindex].SetActive(isActive);
     }
     public void playerSetActiveAll(bool isActive)
     {
         for (int i = 0; i < NUM_PLAYERS; i++)
-            m_players[i].SetActive(isActive);
+        {
+            if (m_players[i] != null)
+                m_players[i].SetActive(isActive);
+        }
     }
     public void playerAllowMovement(int pindex, bool allow)
     {
@@ -105,16 +114,17 @@ public class GameManager : MonoBehaviour
             m_players[i].GetComponent<PlayerMovement>().x_axis_name = xAxisNames[i];
             m_players[i].GetComponent<PlayerMovement>().z_axis_name = zAxisNames[i];
             m_players[i].GetComponent<PlayerMovement>().enabled = false;
-            m_players[i].GetComponent<Renderer>().material.color = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f));
+            //m_players[i].GetComponent<Renderer>().material.color = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f));
         }
 
-        Main();
+        //Main();
+        m_features[featureInUse].runFeature(); //FOR TESTING; WILL CHANGE TO HAVE MAIN MANAGE MAIN MENU AND FEATURES
     }
     private void Main()
     {
         //randomly select games to play
         minigameInPlay = 0;
-
+        
         m_minigames[minigameInPlay].resetGame();
         m_minigames[minigameInPlay].playGame();
     }
