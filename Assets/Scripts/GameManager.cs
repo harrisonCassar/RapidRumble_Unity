@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     }
     public void declareFeatureFinish()
     {
-        print("Finished feature!");
+        Debug.Log("Finished feature!");
         Main();
     }
     public void setToDestroy(Collider deadObject)

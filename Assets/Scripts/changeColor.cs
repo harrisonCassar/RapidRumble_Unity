@@ -20,10 +20,8 @@ public class changeColor : MonoBehaviour
 
         pixelX = map(colorchanger.boardMinX, colorchanger.boardMaxX, 0, colorchanger.IMG_X_MAX, playerXPos);
         pixelY = map(colorchanger.boardMinZ, colorchanger.boardMaxZ, 0, colorchanger.IMG_Y_MAX, playerZPos);
-        print("Pixels: X: " + pixelX + " Y: " + pixelY);
-
+        
         Color px = colorchanger.colorchart.GetPixel(pixelX, pixelY);
-
         gameObject.GetComponent<Renderer>().material.color = new Color(px.r, px.g, px.b);
     }
 

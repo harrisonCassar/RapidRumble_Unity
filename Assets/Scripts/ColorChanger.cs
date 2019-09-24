@@ -44,11 +44,12 @@ public class ColorChanger : Feature
         {
             m_gameManager.m_players[i].AddComponent<changeColor>();
             m_gameManager.m_players[i].GetComponent<changeColor>().colorchanger = this;
+            m_gameManager.m_players[i].AddComponent<cakeslice.Outline>();
         }
         
         //activate all players, and tp back to starting positions
         for (int i = 0; i < m_gameManager.NUM_PLAYERS; i++)
-            m_gameManager.playerMoveToPos(i, m_playerStartPos[i]);
+            m_gameManager.playerMoveToPos(i, new Vector3(Random.Range(boardMinX, boardMaxX),27.0710f,Random.Range(boardMinZ, boardMaxZ)));
 
         m_gameManager.playerSetActiveAll(true);
         m_gameManager.playerAllowMovementAll(true);
@@ -58,8 +59,6 @@ public class ColorChanger : Feature
     protected override bool isFeatureOver()
     {
         secondsElapsed += Time.deltaTime;
-
-        print(secondsElapsed);
 
         if (secondsElapsed >= 10)
         {
@@ -83,6 +82,10 @@ public class ColorChanger : Feature
         for (int i = 0; i < m_gameManager.NUM_PLAYERS; i++)
         {
             Component tmp = m_gameManager.m_players[i].GetComponent<changeColor>();
+            if (tmp != null)
+                Destroy(tmp);
+
+            tmp = m_gameManager.m_players[i].GetComponent<cakeslice.Outline>();
             if (tmp != null)
                 Destroy(tmp);
         }
