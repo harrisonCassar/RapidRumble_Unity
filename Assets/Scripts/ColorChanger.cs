@@ -61,11 +61,11 @@ public class ColorChanger : Feature
 
         print(secondsElapsed);
 
-        /*if (secondsElapsed >= 10)
+        if (secondsElapsed >= 10)
         {
             cleanUpFeature();
             return true;
-        }*/
+        }
         
         return false;
     }
